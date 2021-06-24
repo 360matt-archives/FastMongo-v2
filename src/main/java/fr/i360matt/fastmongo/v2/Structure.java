@@ -40,6 +40,11 @@ public abstract class Structure implements Closeable, Serializable {
         for (final Field field : this.manager.getFieldsCache(getClass())) {
             final Object obj = document.getOrDefault(field.getName(), null);
 
+            if (obj != null) {
+                field.set(this, obj);
+            }
+
+            /*
             if (obj == null) {
                 final Class<?> clazz = field.getType();
                 if (clazz.equals(boolean.class)) {
@@ -62,6 +67,7 @@ public abstract class Structure implements Closeable, Serializable {
             } else {
                 field.set(this, obj);
             }
+             */
         }
     }
 
