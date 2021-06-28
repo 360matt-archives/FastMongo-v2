@@ -1,7 +1,6 @@
 # :boom: FastMongo v2 [![BCH compliance](https://bettercodehub.com/edge/badge/360matt/FastMongo-v2?branch=master)](https://bettercodehub.com/)
 
-Being able to manipulate documents in the form of a personalized structure thanks to reflection.  
-Create any class, add as many fields to it as you want, set defaults to whatever you want, and you can finally use it to fetch and define documents. 
+ORM Allowing to modify documents in the Mongo db very quickly and easily with class fields and optimized reflection.
 
 ### :interrobang: Why use this API ?
 * :bulb: As simple as possible, it is easy to learn
