@@ -29,8 +29,8 @@ public class Database implements Closeable {
     protected static Database def;
     protected ExecutorService executors;
 
-    public final MongoDatabase database;
-    public final MongoClient client;
+    protected final MongoDatabase database;
+    protected final MongoClient client;
 
     /**
      * This class used to structure credentials information.
@@ -89,6 +89,22 @@ public class Database implements Closeable {
      */
     public static Database getDefault () {
         return def;
+    }
+
+    /**
+     * Allow to retrive the legacy MongoDatabase.
+     * @return MongoDatabase instance.
+     */
+    public MongoDatabase getMongoDatabase () {
+        return this.database;
+    }
+
+    /**
+     * Allow to retrieve the legacy MongoClient.
+     * @return getMongoClient instance.
+     */
+    public MongoClient getMongoClient () {
+        return this.client;
     }
 
     /**
