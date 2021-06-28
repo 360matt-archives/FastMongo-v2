@@ -127,6 +127,14 @@ public abstract class Structure implements Closeable, Serializable {
     }
 
     /**
+     * Allow to remove the document if exist.
+     * @return The stat of the existence.
+     */
+    public void delete () {
+        manager.remove(this.id);
+    }
+
+    /**
      * Allow to close this instance, and use it in a try-resource.
      */
     public void close () {
