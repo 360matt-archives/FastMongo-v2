@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * This class is used to classify a Document in relation to one or more fields
@@ -110,10 +109,10 @@ public final class Sort implements Closeable {
      * Allows to retrieve objects in the form of a data instance.
      * @return List of data instances.
      */
-    public final <T extends Structure> List<T> getStructure (final Supplier<T> init) {
+    public final <T extends Structure> List<T> getStructure (final Function<Document, T> init) {
         final List<T> res = new ArrayList<>();
         this.getIterable().iterator().forEachRemaining(x -> {
-            final T inst = init.get();
+            final T inst = init.apply(x);
             try {
                 inst.docToField(x);
                 res.add(inst);
@@ -128,9 +127,9 @@ public final class Sort implements Closeable {
     /**
      * Allows to retrieve objects in the form of a data instance in a consumer.
      */
-    public final <T extends Structure> void foreachStructure (final Supplier<T> init, final Consumer<T> consumer) {
+    public final <T extends Structure> void foreachStructure (final Function<Document, T> init, final Consumer<T> consumer) {
         this.getIterable().iterator().forEachRemaining(x -> {
-            final T inst = init.get();
+            final T inst = init.apply(x);
             try {
                 inst.docToField(x);
                 consumer.accept(inst);
