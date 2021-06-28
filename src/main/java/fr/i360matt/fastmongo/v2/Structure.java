@@ -47,31 +47,6 @@ public abstract class Structure implements Closeable, Serializable {
             if (obj != null) {
                 field.set(this, obj);
             }
-
-            /*
-            if (obj == null) {
-                final Class<?> clazz = field.getType();
-                if (clazz.equals(boolean.class)) {
-                    field.set(this, false);
-                } else if (clazz.equals(byte.class)) {
-                    field.set(this, 0);
-                } else if (clazz.equals(short.class)) {
-                    field.set(this, 0);
-                } else if (clazz.equals(int.class)) {
-                    field.set(this, 0);
-                } else if (clazz.equals(long.class)) {
-                    field.set(this, 0);
-                } else if (clazz.equals(float.class)) {
-                    field.set(this, 0.0);
-                } else if (clazz.equals(double.class)) {
-                    field.set(this, 0.0);
-                } else {
-                    field.set(this, null);
-                }
-            } else {
-                field.set(this, obj);
-            }
-             */
         }
     }
 
