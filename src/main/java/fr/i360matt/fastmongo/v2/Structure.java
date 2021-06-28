@@ -19,7 +19,7 @@ public abstract class Structure implements Closeable, Serializable {
 
     protected static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
 
-    protected Document filter;
+    protected Bson filter;
 
     protected Manager manager;
     protected Object id;
