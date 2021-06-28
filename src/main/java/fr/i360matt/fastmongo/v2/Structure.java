@@ -31,6 +31,8 @@ public abstract class Structure implements Closeable, Serializable {
         this.manager = manager;
 
         this.filter = Filters.eq(manager.getFieldID(), id);
+
+        this.load(); // must load current data before futures saves.
     }
 
     /**
