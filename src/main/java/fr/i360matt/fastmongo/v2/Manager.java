@@ -104,7 +104,7 @@ public class Manager {
      * Used to retrieve the native MongoCollection object from the MongoDB driver.
      * @return native MongoCollection object from the MongoDB driver.
      */
-    public MongoCollection<Document> getCollection () {
+    public MongoCollection<Document> getMongoCollection () {
         return this.collection;
     }
 
