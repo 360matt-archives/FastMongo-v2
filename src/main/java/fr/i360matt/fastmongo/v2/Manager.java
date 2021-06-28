@@ -2,6 +2,7 @@ package fr.i360matt.fastmongo.v2;
 
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 import java.lang.reflect.Field;
@@ -127,8 +128,8 @@ public class Manager {
      * Allows to delete the item
      * @param id element id
      */
-    public final void remove (final String id) {
-        collection.deleteOne(new Document(this.fieldID, id));
+    public final void remove (final Object id) {
+        collection.deleteOne(Filters.eq(this.fieldID, id));
     }
 
 

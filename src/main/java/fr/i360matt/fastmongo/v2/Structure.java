@@ -1,7 +1,9 @@
 package fr.i360matt.fastmongo.v2;
 
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.io.Closeable;
 import java.io.Serializable;
@@ -28,7 +30,7 @@ public abstract class Structure implements Closeable, Serializable {
         this.id = id;
         this.manager = manager;
 
-        this.filter = new Document(manager.getFieldID(), this.id);
+        this.filter = Filters.eq(manager.getFieldID(), id);
     }
 
     /**
