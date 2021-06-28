@@ -65,9 +65,9 @@ database.setDefault();
 
 ## :zzz: Legacy references:
 ```java
-Database#client // MongoClient
-Database#database // MongoDatabase
-Manager#getCollection() // MongoCollection<Document>
+Database#getMongoClient() // MongoClient
+Database#getMongoDatabase() // MongoDatabase
+Manager#getMongoCollection() // MongoCollection<Document>
 ```
 
 ## :zap: Collection Manager:
