@@ -35,6 +35,21 @@ public abstract class Structure implements Closeable, Serializable {
         this.load(); // must load current data before futures saves.
     }
 
+    public Structure (final Document doc, final Manager manager) {
+        this.id = doc.getOrDefault(manager.getFieldID(), null);
+        this.manager = manager;
+
+        this.filter = Filters.eq(manager.getFieldID(), id);
+
+        try {
+            this.docToField(doc);
+            // must load current data before futures saves.
+            // and must load from Document arg and no re-load.
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Allows you to convert a Document object to the fields of the current instance using the cache.
      * @param document The document retrieved from the database.
