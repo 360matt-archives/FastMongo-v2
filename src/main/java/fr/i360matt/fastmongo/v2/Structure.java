@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
  * @author 360matt
  * @version 2.0.0
  */
-public abstract class Structure implements Closeable, Serializable {
+public class Structure implements Closeable, Serializable {
 
     protected static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
 
