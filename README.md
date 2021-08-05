@@ -2,15 +2,6 @@
 
 ORM Allowing to modify documents in the Mongo db very quickly and easily with class fields and optimized reflection.
 
-## Maven
-```
-<dependency>
-    <groupId>io.github.360matt</groupId>
-    <artifactId>FastMongo-v2</artifactId>
-    <version>2.0-SNAPSHOT</version>
-</dependency>
-```
-
 ### :interrobang: Why use this API ?
 * :bulb: As simple as possible, it is easy to learn
 * :hourglass: Its use is very fast, even the migration
@@ -29,6 +20,15 @@ ORM Allowing to modify documents in the Mongo db very quickly and easily with cl
 
 ### :link: Dependencies:
 * I only use the official Mongo driver in the latest version (4.2.3)
+
+## Maven
+```
+<dependency>
+    <groupId>io.github.360matt</groupId>
+    <artifactId>FastMongo-v2</artifactId>
+    <version>2.0-SNAPSHOT</version>
+</dependency>
+```
 
 ### :muscle: Benchmarks:
 With FX8300 overclocked 4Ghz / DDR3 overclocked 1600Mhz.  
