@@ -23,6 +23,12 @@ ORM Allowing to modify documents in the Mongo db very quickly and easily with cl
 
 ## Maven
 ```
+<repositories>
+    <repository>
+        <id>bungeecord-repo</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+</repositories>
 <dependency>
     <groupId>io.github.360matt</groupId>
     <artifactId>FastMongo-v2</artifactId>
