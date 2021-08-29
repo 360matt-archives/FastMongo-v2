@@ -35,7 +35,7 @@ public class Manager {
         this.name = name;
 
         if ((this.database = Database.getDefault()) == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("No default db defined.");
         }
 
         if (!this.database.existCollect(name))

@@ -13,7 +13,6 @@ import org.bson.Document;
 
 import java.io.Closeable;
 import java.util.Collections;
-import java.util.concurrent.ExecutorService;
 
 /**
  *
@@ -27,7 +26,6 @@ import java.util.concurrent.ExecutorService;
 public class Database implements Closeable {
 
     protected static Database def;
-    protected ExecutorService executors;
 
     protected final MongoDatabase database;
     protected final MongoClient client;
@@ -139,7 +137,6 @@ public class Database implements Closeable {
     public void close () {
         if (this.client == null) return;
         this.client.close();
-        this.executors.shutdownNow();
     }
 
 }
