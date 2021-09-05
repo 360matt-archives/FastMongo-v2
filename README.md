@@ -32,7 +32,7 @@ ORM Allowing to modify documents in the Mongo db very quickly and easily with cl
 <dependency>
     <groupId>io.github.360matt</groupId>
     <artifactId>FastMongo-v2</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
