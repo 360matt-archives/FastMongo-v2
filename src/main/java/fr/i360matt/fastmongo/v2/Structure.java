@@ -2,6 +2,8 @@ package fr.i360matt.fastmongo.v2;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
+import fr.i360matt.FastMongoEnabler;
+import fr.i360matt.enabler.Enabler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -16,6 +18,10 @@ import java.lang.reflect.Field;
  * @version 2.0.0
  */
 public class Structure implements Closeable, Serializable {
+
+    static {
+        Enabler.call(FastMongoEnabler.class);
+    }
 
     protected static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
 

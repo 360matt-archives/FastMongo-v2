@@ -2,6 +2,8 @@ package fr.i360matt.fastmongo.v2;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Sorts;
+import fr.i360matt.FastMongoEnabler;
+import fr.i360matt.enabler.Enabler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -18,6 +20,11 @@ import java.util.function.Function;
  * @version 2.0.0
  */
 public final class Sort implements Closeable {
+
+    static {
+        Enabler.call(FastMongoEnabler.class);
+    }
+
     public enum Direction {
         ASCENDING, DESCENDING
     }

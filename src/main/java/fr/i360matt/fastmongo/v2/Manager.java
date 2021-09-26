@@ -3,6 +3,8 @@ package fr.i360matt.fastmongo.v2;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import fr.i360matt.FastMongoEnabler;
+import fr.i360matt.enabler.Enabler;
 import org.bson.Document;
 
 import java.lang.reflect.Field;
@@ -21,6 +23,10 @@ import java.util.List;
  * @version 2.0.0
  */
 public class Manager {
+
+    static {
+        Enabler.call(FastMongoEnabler.class);
+    }
 
     protected final Database database;
     protected final MongoCollection<Document> collection;
