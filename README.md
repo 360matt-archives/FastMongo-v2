@@ -26,13 +26,13 @@ ORM Allowing to modify documents in the Mongo db very quickly and easily with cl
 <repositories>
     <repository>
         <id>sonatype</id>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
 </repositories>
 <dependency>
     <groupId>io.github.360matt</groupId>
     <artifactId>FastMongo-v2</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -87,13 +87,13 @@ Manager#getMongoCollection() // MongoCollection<Document>
 
 ## :zap: Collection Manager:
 ```java
-Manager man = new Manager( "name" );
-// get collection Manager for default (first instantied) database
+Manager<Class> man = new Manager<>( Class, String );
 
+Manager<Class> man = new Manager<>( Class, String, Database );
 
-Manager man = new Manager ( "name", Database );
-// get collection Manager for chosen database
-
+// Class: the Element / Structure class.
+// "name": the name of the collection.
+// Database: optional, choose the database!;
 
 ```
 
@@ -121,8 +121,8 @@ man.remove( "name" );
 
 * It is possible to classify documents by order according to one or more fields:  
 ```java
-Sort sort = man.buildSort("", "", "", "", "", ""); // you can set ascending fields here
-Sort sort = man.buildSort(); // or keep empty
+Sort<T> sort = man.buildSort("", "", "", "", "", ""); // you can set ascending fields here
+Sort<T> sort = man.buildSort(); // or keep empty
 
 
 
@@ -140,29 +140,12 @@ List<Document> list = sort.getDocuments();
 
 You can return instances:
 ```java
-Function<Document, ****> instantiate = (doc) -> {
-  return new ****(doc);
-};
-// this function permit to instantiate your data-class instances.
-// You must declare your own constructor, call it ``super(document, manager);``
-
-// ___________________________________________________________________________
-
-List<****> list = sort.getStructure(instantiate);
-
+List<T> list = sort.getElements();
 ```
 
 You can forEach instances:
 ```java
-Function<Document, ****> instantiate = (doc) -> {
-  return new ****(doc);
-};
-// this function permit to instantiate your data-class instances.
-// You must declare your own constructor, call it ``super(document, manager);``
-
-// ___________________________________________________________________________
-
-sort.foreachStructure(instantiate, (yourInstances of ****) -> {
+sort.foreachStructure(( element ) -> {
     // do stuff
 });
 
@@ -175,15 +158,15 @@ it is thanks to an instance that we can handle a document in the DB (create, mod
 
 Example blank class-file:
 ```java
-public class **** extends Structure {
-    public static final Manager manager = new Manager("****");
+public class **** extends Element {
+    public static final Manager<****> manager = new Manager<>(****.class, "****");
+    
+    @ID
+    protected Object _id;
     
     public **** (final Object id) {
-        super(id, manager);
-    }
-
-    public **** (final Document doc) {
-        super(doc, manager);
+        super(manager);
+        this._id = id;
     }
 }
 ```
