@@ -2,8 +2,6 @@ package fr.i360matt.fastmongo.v2;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
-import fr.i360matt.FastMongoEnabler;
-import fr.i360matt.enabler.Enabler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -17,43 +15,34 @@ import java.lang.reflect.Field;
  * @author 360matt
  * @version 2.0.0
  */
-public class Structure implements Closeable, Serializable {
-
-    static {
-        Enabler.call(FastMongoEnabler.class);
-    }
-
+public class Element implements Closeable, Serializable {
     protected static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
 
-    protected Bson filter;
+    protected Manager<?> manager;
 
-    protected Manager manager;
-    protected Object id;
+    private Bson filter;
+    private Object cache_id;
 
-
-
-    public Structure (final Object id, final Manager manager) {
-        this.id = id;
+    public Element (final Manager<?> manager) {
         this.manager = manager;
-
-        this.filter = Filters.eq(manager.getFieldID(), id);
-
-        this.load(); // must load current data before futures saves.
     }
 
-    public Structure (final Document doc, final Manager manager) {
-        this.id = doc.getOrDefault(manager.getFieldID(), null);
-        this.manager = manager;
+    public Bson getFilter () {
+        if (this.filter == null)
+            this.filter = Filters.eq(manager.getFieldID().getName(), getID());
+        return this.filter;
+    }
 
-        this.filter = Filters.eq(manager.getFieldID(), id);
-
-        try {
-            this.docToField(doc);
-            // must load current data before futures saves.
-            // and must load from Document arg and no re-load.
-        } catch (final Exception e) {
-            e.printStackTrace();
+    public Object getID () {
+        if (this.cache_id == null) {
+            try {
+                this.cache_id = this.manager.getFieldID().get(this);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
+        return this.cache_id;
     }
 
     /**
@@ -61,10 +50,9 @@ public class Structure implements Closeable, Serializable {
      * @param document The document retrieved from the database.
      * @throws IllegalAccessException A field access exception.
      */
-    protected void docToField (final Document document) throws IllegalAccessException {
-        for (final Field field : this.manager.getFieldsCache(getClass())) {
+    public void docToField (final Document document) throws IllegalAccessException {
+        for (final Field field : this.manager.getFieldsCache()) {
             final Object obj = document.getOrDefault(field.getName(), null);
-
             if (obj != null) {
                 field.set(this, obj);
             }
@@ -76,16 +64,20 @@ public class Structure implements Closeable, Serializable {
      * @return The Document object.
      * @throws IllegalAccessException A field access exception.
      */
-    protected Document fieldToDoc () throws IllegalAccessException {
-        final Document document = new Document(this.manager.getFieldID(), this.id);
-
-        for (final Field field : this.manager.getFieldsCache(getClass())) {
+    public Document fieldToDoc () throws IllegalAccessException {
+        final Document document = new Document(this.manager.getFieldID().getName(), this.getID());
+        for (final Field field : this.manager.getFieldsCache())
             document.put(field.getName(), field.get(this));
-        }
         return document;
     }
 
+    public Manager<?> getManager () {
+        return manager;
+    }
 
+    protected void setManager (final Manager<?> manager) {
+        this.manager = manager;
+    }
 
     // ____________________________________________________________________________________________
 
@@ -93,7 +85,10 @@ public class Structure implements Closeable, Serializable {
      * Allows to load the data.
      */
     public void load () {
-        final Document doc = manager.collection.find(this.filter).first();
+        if (this instanceof Custom)
+            ((Custom) this).customLoad();
+
+        final Document doc = manager.collection.find(this.getFilter()).first();
         if (doc != null) {
             try {
                 this.docToField(doc);
@@ -107,12 +102,15 @@ public class Structure implements Closeable, Serializable {
      * Allow to save the data.
      */
     public void save () {
+        if (this instanceof Custom)
+            ((Custom) this).customSave();
+
         try {
             final Document doc = this.fieldToDoc();
             if (doc.isEmpty()) return;
 
             this.manager.collection.updateOne(
-                    this.filter,
+                    this.getFilter(),
                     new Document("$set", doc),
                     UPSERT
             );
@@ -130,7 +128,7 @@ public class Structure implements Closeable, Serializable {
             if (doc.isEmpty()) return;
 
             this.manager.collection.updateOne(
-                    this.filter,
+                    this.getFilter(),
                     new Document("$insert", doc),
                     UPSERT
             );
@@ -144,24 +142,22 @@ public class Structure implements Closeable, Serializable {
      * @return The stat of the existence.
      */
     public boolean exist () {
-        return manager.existObject(this.id);
+        return manager.existObject(this.getID());
     }
 
     /**
      * Allow to remove the document if exist.
-     * @return The stat of the existence.
      */
     public void delete () {
-        manager.remove(this.id);
+        manager.remove(this.getID());
     }
 
     /**
      * Allow to close this instance, and use it in a try-resource.
      */
     public void close () {
-        // nothing to free, lol.
+        // save the data.
+        save();
     }
-
-
 
 }

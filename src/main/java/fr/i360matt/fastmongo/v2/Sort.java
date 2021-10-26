@@ -2,8 +2,6 @@ package fr.i360matt.fastmongo.v2;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Sorts;
-import fr.i360matt.FastMongoEnabler;
-import fr.i360matt.enabler.Enabler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -11,7 +9,6 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * This class is used to classify a Document in relation to one or more fields
@@ -19,18 +16,14 @@ import java.util.function.Function;
  * @author 360matt
  * @version 2.0.0
  */
-public final class Sort implements Closeable {
-
-    static {
-        Enabler.call(FastMongoEnabler.class);
-    }
+public final class Sort<T extends Element> implements Closeable {
 
     public enum Direction {
         ASCENDING, DESCENDING
     }
 
     private FindIterable<Document> iter;
-    private final Manager manager;
+    private final Manager<T> manager;
     private int limit;
     private int skip;
 
@@ -38,7 +31,7 @@ public final class Sort implements Closeable {
      * Allows to create a classification that can be completed later
      * @param manager The manager of the collection where the classification is supposed to take place
      */
-    public Sort (final Manager manager) {
+    public Sort (final Manager<T> manager) {
         this.manager = manager;
     }
 
@@ -47,7 +40,7 @@ public final class Sort implements Closeable {
      * @param limit The number of documents to classify
      * @return The current instance
      */
-    public final Sort setLimit (final int limit) {
+    public final Sort<T> setLimit (final int limit) {
         this.limit = limit;
         return this;
     }
@@ -57,12 +50,12 @@ public final class Sort implements Closeable {
      * @param skip The number of documents to skip before sorting the documents.
      * @return The current instance
      */
-    public final Sort skip (final int skip) {
+    public final Sort<T> skip (final int skip) {
         this.skip = skip;
         return this;
     }
 
-    private Sort addRule (final boolean ascending, final String... fields) {
+    private Sort<T> addRule (final boolean ascending, final String... fields) {
         final Bson choice = (ascending) ? Sorts.ascending(fields) : Sorts.descending(fields);
         this.iter = (this.iter == null) ? manager.collection.find().sort(choice) : this.iter.sort(choice);
         return this;
@@ -73,7 +66,7 @@ public final class Sort implements Closeable {
      * @param fields The fields you want to add as criteria
      * @return The current instance
      */
-    public final Sort ascending (final String... fields) {
+    public final Sort<T> ascending (final String... fields) {
         return addRule(true, fields);
     }
 
@@ -82,7 +75,7 @@ public final class Sort implements Closeable {
      * @param fields The fields you want to add as criteria
      * @return The current instance
      */
-    public final Sort descending (final String... fields) {
+    public final Sort<T> descending (final String... fields) {
         return addRule(false, fields);
     }
 
@@ -116,11 +109,12 @@ public final class Sort implements Closeable {
      * Allows to retrieve objects in the form of a data instance.
      * @return List of data instances.
      */
-    public final <T extends Structure> List<T> getStructure (final Function<Document, T> init) {
+    public final List<T> getElements () {
         final List<T> res = new ArrayList<>();
         this.getIterable().iterator().forEachRemaining(x -> {
-            final T inst = init.apply(x);
             try {
+                final T inst = this.manager.instantiate.newInstance();
+                inst.setManager(this.manager);
                 inst.docToField(x);
                 res.add(inst);
             } catch (IllegalAccessException e) {
@@ -134,10 +128,11 @@ public final class Sort implements Closeable {
     /**
      * Allows to retrieve objects in the form of a data instance in a consumer.
      */
-    public final <T extends Structure> void foreachStructure (final Function<Document, T> init, final Consumer<T> consumer) {
+    public final void foreachElements (final Consumer<T> consumer) {
         this.getIterable().iterator().forEachRemaining(x -> {
-            final T inst = init.apply(x);
             try {
+                final T inst = this.manager.instantiate.newInstance();
+                inst.setManager(this.manager);
                 inst.docToField(x);
                 consumer.accept(inst);
             } catch (IllegalAccessException e) {

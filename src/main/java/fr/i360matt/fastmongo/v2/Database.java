@@ -9,8 +9,6 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import fr.i360matt.FastMongoEnabler;
-import fr.i360matt.enabler.Enabler;
 import org.bson.Document;
 
 import java.io.Closeable;
@@ -26,10 +24,6 @@ import java.util.Collections;
  @version 2.0.0
  */
 public class Database implements Closeable {
-
-    static {
-        Enabler.call(FastMongoEnabler.class);
-    }
 
     protected static Database def;
 
@@ -93,6 +87,13 @@ public class Database implements Closeable {
      */
     public static Database getDefault () {
         return def;
+    }
+
+    /**
+     * Static method used to define a database as default.
+     */
+    public static void setDefault (final Database database) {
+        def = database;
     }
 
     /**
