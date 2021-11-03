@@ -9,6 +9,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.CreateCollectionOptions;
 import org.bson.Document;
 
 import java.io.Closeable;
@@ -117,7 +118,7 @@ public class Database implements Closeable {
      * @param name The name of the collection
      * @return The answer about existence
      */
-    public boolean existCollect (final String name) {
+    public boolean existCollection (final String name) {
         for (final String candidate : this.database.listCollectionNames())
             if (candidate.equalsIgnoreCase(name))
                 return true;
@@ -128,18 +129,30 @@ public class Database implements Closeable {
      * Allows to create a collection, without error checking, you must use existCollect() before evoking this method.
      * @param name The name of the collection to create
      */
-    public void createCollect (final String name) {
+    public void createCollection (final String name) {
         this.database.createCollection(name);
     }
+
+    /**
+     * Allows to create a collection, without error checking, you must use existCollect() before evoking this method.
+     * @param name The name of the collection to create
+     * @param options The options to apply to the collection
+     */
+    public void createCollection (final String name, final CreateCollectionOptions options) {
+        this.database.createCollection(name, options);
+    }
+
 
     /**
      * Allows to retrieve a collection
      * @param name The name of the collection
      * @return the collection, can be null.
      */
-    public MongoCollection<Document> getCollect (final String name) {
+    public MongoCollection<Document> getCollection (final String name) {
         return this.database.getCollection(name);
     }
+
+
 
     public void close () {
         if (this.client == null) return;

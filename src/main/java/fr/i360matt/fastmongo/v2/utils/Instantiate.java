@@ -1,26 +1,35 @@
 package fr.i360matt.fastmongo.v2.utils;
 
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
-import org.objenesis.instantiator.ObjectInstantiator;
+import fr.i360matt.fastmongo.v2.utils.objenesis.Objenesis;
+import fr.i360matt.fastmongo.v2.utils.objenesis.ObjenesisStd;
+import fr.i360matt.fastmongo.v2.utils.objenesis.instantiator.ObjectInstantiator;
+
+import java.lang.reflect.Constructor;
 
 /**
- *
  * Read: http://objenesis.org/tutorial.html
- *
- * @param <T> the class to instantiate.
  */
 
-public class Instantiate <T> {
-    protected static final Objenesis objenesis = new ObjenesisStd(); // or ObjenesisSerializer
+public final class Instantiate {
+    private static final Objenesis objenesis = new ObjenesisStd(); // or ObjenesisSerializer
 
-    private final ObjectInstantiator<T> instantiator;
+    public static <T> T newInstance (final Class<T> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+            try {
+                final Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
+                final Object[] args = new Object[constructor.getParameterCount()];
+                for (int i = 0; i < constructor.getParameterCount(); i++)
+                    args[i] = null;
+                return (T) constructor.newInstance(args);
+            } catch (Exception e2) {
+                // @Deprecated
 
-    public Instantiate (final Class<T> clazz) {
-        instantiator = objenesis.getInstantiatorOf(clazz);
-    }
+                ObjectInstantiator<T> instantiator = objenesis.getInstantiatorOf(clazz);;
 
-    public T newInstance () {
-        return instantiator.newInstance();
+                return instantiator.newInstance();
+            }
+        }
     }
 }

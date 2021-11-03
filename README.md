@@ -2,6 +2,8 @@
 
 ORM Allowing to modify documents in the Mongo db very quickly and easily with class fields and optimized reflection.
 
+This documentation is incomplete since v2.3 was released.
+
 ### :interrobang: Why use this API ?
 * :bulb: As simple as possible, it is easy to learn
 * :hourglass: Its use is very fast, even the migration
@@ -32,7 +34,7 @@ ORM Allowing to modify documents in the Mongo db very quickly and easily with cl
 <dependency>
     <groupId>io.github.360matt</groupId>
     <artifactId>FastMongo-v2</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -87,22 +89,21 @@ Manager#getMongoCollection() // MongoCollection<Document>
 
 ## :zap: Collection Manager:
 ```java
+Manager<Class> man = new Manager<>( Class );
+
+Manager<Class> man = new Manager<>( Class, Database );
+
 Manager<Class> man = new Manager<>( Class, String );
 
 Manager<Class> man = new Manager<>( Class, String, Database );
 
 // Class: the Element / Structure class.
-// "name": the name of the collection.
+// "name": optional, the name of the collection (or of the class).
 // Database: optional, choose the database!;
 
 ```
 
 ### :hammer: Features:
-* Modify default field id name:  
-```java
-man.setFieldID( "_id" );
-// Define the name of the default field used by the API when instantiating data classes.
-```
 
 * Clear/Drop a collection:  
 ```java
@@ -119,38 +120,7 @@ booelan state = man.existObject( "name" );
 man.remove( "name" );
 ```
 
-* It is possible to classify documents by order according to one or more fields:  
-```java
-Sort<T> sort = man.buildSort("", "", "", "", "", ""); // you can set ascending fields here
-Sort<T> sort = man.buildSort(); // or keep empty
 
-
-
-sort.ascending("one", "two", "variadic");
-sort.descending("three", "fourth", "variadic");
-
-sort.skip(10); // ignore the 10 firsts documents
-sort.setLimit(50); // maximum 50 documents returned
-```
-
-You can return documents:
-```java
-List<Document> list = sort.getDocuments();
-```
-
-You can return instances:
-```java
-List<T> list = sort.getElements();
-```
-
-You can forEach instances:
-```java
-sort.foreachStructure(( element ) -> {
-    // do stuff
-});
-
-
-```
 
 ## :unlock: Yours Class-Data instances (represents a document):
 The instances each represent a document whether it is fictitious or not.  
@@ -159,7 +129,7 @@ it is thanks to an instance that we can handle a document in the DB (create, mod
 Example blank class-file:
 ```java
 public class **** extends Element {
-    public static final Manager<****> manager = new Manager<>(****.class, "****");
+    public static final Manager<****> manager = new Manager<>(****.class, [["****"]]);
     
     @ID
     protected Object _id;
@@ -177,14 +147,14 @@ public class **** extends Element {
 ```java
 **** instance = ?;
 
-Document doc = instance.fieldToDoc(); 
+Map<String, Object> doc = instance.serialize(); 
 // must catch java.lang.IllegalAccessException
 ```
 * Set from document equivalent:
 ```java
 **** instance = ?;
 
-instance.docToField( doc ); 
+instance.deserialize( map/doc ); 
 // must catch java.lang.IllegalAccessException
 ```
 
