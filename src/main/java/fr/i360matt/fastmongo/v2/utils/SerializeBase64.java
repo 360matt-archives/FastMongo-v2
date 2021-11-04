@@ -17,8 +17,7 @@ public final class SerializeBase64 {
                 return Base64.getEncoder().encodeToString(bytes);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Cannot serialize '" +  e.getMessage() + "' (" + instance.getClass().getName() + ")");
         }
     }
 

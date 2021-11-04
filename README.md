@@ -34,7 +34,7 @@ This documentation is incomplete since v2.3 was released.
 <dependency>
     <groupId>io.github.360matt</groupId>
     <artifactId>FastMongo-v2</artifactId>
-    <version>2.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
 </dependency>
 ```
 

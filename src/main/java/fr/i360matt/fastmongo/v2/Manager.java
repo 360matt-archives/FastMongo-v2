@@ -185,17 +185,13 @@ public class Manager <T extends Element> {
 
         try (final MongoCursor<Document> iter = iterable.iterator()) {
             while (iter.hasNext()) {
-                try {
-                    final Document document = iter.next();
+                final Document document = iter.next();
 
-                    final T instance = Instantiate.newInstance(this.clazz);
-                    instance.setManager(this);
-                    instance.deserialize(document);
+                final T instance = Instantiate.newInstance(this.clazz);
+                instance.setManager(this);
+                instance.deserialize(document);
 
-                    init.add(instance);
-                } catch (final java.lang.IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                init.add(instance);
             }
         }
         return init;

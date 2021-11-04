@@ -109,14 +109,10 @@ public final class Sort<T extends Element> {
     public List<T> getElements () {
         final List<T> res = new ArrayList<>();
         this.getIterable().iterator().forEachRemaining(x -> {
-            try {
-                final T inst = Instantiate.newInstance(this.manager.getElementType());
-                inst.setManager(this.manager);
-                inst.deserialize(x);
-                res.add(inst);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            final T inst = Instantiate.newInstance(this.manager.getElementType());
+            inst.setManager(this.manager);
+            inst.deserialize(x);
+            res.add(inst);
         });
         return res;
     }
@@ -126,14 +122,10 @@ public final class Sort<T extends Element> {
      */
     public void foreachElements (final Consumer<T> consumer) {
         this.getIterable().iterator().forEachRemaining(x -> {
-            try {
-                final T inst = Instantiate.newInstance(this.manager.getElementType());
-                inst.setManager(this.manager);
-                inst.deserialize(x);
-                consumer.accept(inst);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            final T inst = Instantiate.newInstance(this.manager.getElementType());
+            inst.setManager(this.manager);
+            inst.deserialize(x);
+            consumer.accept(inst);
         });
     }
 

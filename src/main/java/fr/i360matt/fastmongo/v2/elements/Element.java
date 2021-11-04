@@ -63,11 +63,7 @@ public class Element extends StorableObject implements Closeable {
     public final void load (final Bson bson) {
         final Document doc = manager.getMongoCollection().find(bson).first();
         if (doc != null) {
-            try {
-                this.deserialize(doc);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            this.deserialize(doc);
         }
     }
 
