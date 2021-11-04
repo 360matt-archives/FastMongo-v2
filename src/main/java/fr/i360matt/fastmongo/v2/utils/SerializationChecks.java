@@ -1,13 +1,9 @@
 package fr.i360matt.fastmongo.v2.utils;
 
-import sun.reflect.generics.reflectiveObjects.WildcardTypeImpl;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public final class SerializationChecks {
 
@@ -26,8 +22,7 @@ public final class SerializationChecks {
             return true;
 
 
-
-        if (Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type)) {
+        if (ArrayList.class.isAssignableFrom(type) || HashMap.class.isAssignableFrom(type)) {
             if (field == null)
                 return true;
             Type genericType = field.getGenericType();

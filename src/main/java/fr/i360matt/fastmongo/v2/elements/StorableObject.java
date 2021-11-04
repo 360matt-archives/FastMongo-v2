@@ -52,7 +52,8 @@ public class StorableObject implements Serializable {
                         StorableObject oneInstance = (StorableObject) Instantiate.newInstance(field.getType());
                         oneInstance.deserialize((Document) obj);
                         obj = oneInstance;
-                    } else continue;
+                    } else if (!HashMap.class.isAssignableFrom(field.getType()))
+                        continue;
                 } else if (!field.getName().equals("_id") && !SerializationChecks.isSerializable(field)) {
                     if (obj instanceof String) {
                         obj = SerializeBase64.deserialize((String) obj);
